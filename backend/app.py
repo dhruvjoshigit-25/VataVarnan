@@ -5,12 +5,15 @@ from flask import Flask
 from flask import request
 import requests
 import math
+from flask_cors import CORS, cross_origin
+
+
 
 
 # Flask constructor takes the name of
 # current module (__name__) as argument.
 app = Flask(__name__)
-
+CORS(app, support_credentials=True)
 
 @app.route('/')
 def home():
@@ -58,6 +61,7 @@ def weather():
 
 
 @app.route('/ice-cover')
+@cross_origin(supports_credentials=True)
 def ice_cover():
 	r = requests.get("https://global-warming.org/api/arctic-api")
 	x = r.json()["result"]

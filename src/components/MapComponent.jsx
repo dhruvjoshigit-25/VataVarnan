@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import axios from 'axios';
+import Weather from './Weather';
 
 import { Map, GoogleApiWrapper, Marker  } from 'google-maps-react';
 const containerStyle = { 
@@ -6,6 +8,28 @@ const containerStyle = {
     height: '50%'
   }
 export class MapComponent extends Component {
+
+    
+
+    constructor(props) {
+        super(props);
+        this.state = {
+          locations: []
+        };
+        this.handleMapClick = this.handleMapClick.bind(this);
+    }
+
+    
+
+    handleMapClick = (ref, map, ev) => {
+        const location = ev.latLng;
+        console.log(location.lat())
+        
+        this.setState(() => ({
+          locations: [location]
+        }));
+        map.panTo(location);
+    };
 
     render() {
 
@@ -19,15 +43,18 @@ export class MapComponent extends Component {
                         lng: -122.176
                     }}
                     containerStyle= { containerStyle }
+                    onClick={this.handleMapClick}
                 >
-                    <Marker key="marker_1"
-                        position={{
-                            lat: 47.444,
-                            lng: -122.176
-                        }}
+                    {this.state.locations.map((location, i) => {
+                        return (
+                        <Marker
+                            key={i}
+                            position={{ lat: location.lat(), lng: location.lng() }}
                         />
-
+                        );
+                    })}
                 </Map>
+                <Weather data={this.state.locations}/>
 
             </div>);
 
