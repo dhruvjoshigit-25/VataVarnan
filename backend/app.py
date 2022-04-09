@@ -39,12 +39,21 @@ def test():
 @app.route('/weather')
 # ‘/’ URL is bound with hello_world() function.
 def weather():
+	data = []
+	map = {'clear': 'Clear', 'pcloudy': 'Partly Cloudy', 'cloudy': 'Cloudy', 'rain': 'Rain', 'snow': 'Snow', 'ts': 'Thunderstorm', 'tsrain': 'Thunderstorm with rain'}
 	url = "https://www.7timer.info/bin/api.pl"
 
 	querystring = {"lon": request.args.get('lon'), "lat": request.args.get('lat'), "product": "civillight", "output": "json"}
 	response = requests.request("GET", url, params=querystring)
+	data_7_days = response.json()["dataseries"]
 
-	return response.text
+	for day in data_7_days:
+		weather = map[day['weather']]
+		max_temp = day['temp2m']['max']
+		min_temp = day['temp2m']['min']
+		data.append((day['date'], weather, max_temp, min_temp))
+
+	return {'data': data}
 
 
 @app.route('/ice-cover')
