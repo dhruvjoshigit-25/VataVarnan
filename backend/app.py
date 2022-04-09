@@ -4,6 +4,7 @@ import json
 from flask import Flask
 from flask import request
 import requests
+import math
 
 
 # Flask constructor takes the name of
@@ -66,6 +67,7 @@ def ice_cover():
 	
 	return {'data' : lst}
 
+
 @app.route('/air-quality/get-countries')
 def air_quality_get_countries():
 	url = "http://api.airvisual.com/v2/countries"
@@ -126,6 +128,29 @@ def air_quality_by_city():
 
 	return aqi
 
+
+@app.route('/methane')
+def methane():
+	url = 'https://global-warming.org/api/methane-api'
+	res = {}
+	lst = []
+
+	response = requests.request("GET", url)
+	data = response.json()["methane"]
+
+	prev_year = 1983.0
+	for x in data:
+		_, new_year = math.modf(float(x['date']))
+		
+		if new_year == prev_year:
+			lst.append(float(x['average']))
+
+		else:
+			res[prev_year] = round(sum(lst) / len(lst), 2)
+			lst = []
+			prev_year = new_year
+
+	return {'data': res}
 
 # @app.route('/air-quality/get-aqi')
 # def air_quality():
