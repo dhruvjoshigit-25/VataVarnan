@@ -42,7 +42,7 @@ class IndiaMap extends React.Component {
                   {"id":"IN.WB","value":33},
                   {"id":"IN.TG","value":34},
                   {"id":"IN.JK","value":35},
-                  {"id":"IN.LA","value":36}]
+                  {"id":"IN.LA","value":400}]
         );
         return (
             <div className="india-map">
